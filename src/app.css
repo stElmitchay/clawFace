@@ -1,0 +1,75 @@
+:root {
+	--bg-primary: #ffffff;
+	--bg-secondary: #f2f2f7;
+	--text-primary: #1c1c1e;
+	--text-secondary: #8e8e93;
+	--text-tertiary: #c7c7cc;
+	--border-color: #d1d1d6;
+	--input-bg: #f2f2f7;
+	--bubble-assistant: #e5e5ea;
+	--code-bg: rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		--bg-primary: #1c1c1e;
+		--bg-secondary: #2c2c2e;
+		--text-primary: #f5f5f7;
+		--text-secondary: #98989d;
+		--text-tertiary: #636366;
+		--border-color: #38383a;
+		--input-bg: #2c2c2e;
+		--bubble-assistant: #2c2c2e;
+		--code-bg: rgba(255, 255, 255, 0.08);
+	}
+}
+
+:root[data-theme='dark'] {
+	--bg-primary: #1c1c1e;
+	--bg-secondary: #2c2c2e;
+	--text-primary: #f5f5f7;
+	--text-secondary: #98989d;
+	--text-tertiary: #636366;
+	--border-color: #38383a;
+	--input-bg: #2c2c2e;
+	--bubble-assistant: #2c2c2e;
+	--code-bg: rgba(255, 255, 255, 0.08);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100%;
+	font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	background: var(--bg-primary);
+	color: var(--text-primary);
+	overflow: hidden;
+	user-select: none;
+}
+
+::selection {
+	background: rgba(0, 122, 255, 0.3);
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--text-tertiary);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--text-secondary);
+}
