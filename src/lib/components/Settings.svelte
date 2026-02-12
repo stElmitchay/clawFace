@@ -18,6 +18,10 @@
 		updateSettings({ model: (e.target as HTMLInputElement).value });
 	}
 
+	function handleAgentIdChange(e: Event) {
+		updateSettings({ agentId: (e.target as HTMLInputElement).value });
+	}
+
 	function handleTokenChange(e: Event) {
 		updateSettings({ token: (e.target as HTMLInputElement).value });
 	}
@@ -28,7 +32,7 @@
 
 	async function testConnection() {
 		testResult = 'testing';
-		const ok = await checkConnection(settings.gatewayUrl);
+		const ok = await checkConnection(settings.gatewayUrl, settings.token);
 		testResult = ok ? 'success' : 'fail';
 		setTimeout(() => (testResult = 'idle'), 3000);
 	}
@@ -59,7 +63,7 @@
 				type="url"
 				value={settings.gatewayUrl}
 				oninput={handleUrlChange}
-				placeholder="http://localhost:11434"
+				placeholder="http://localhost:18789"
 			/>
 		</div>
 
@@ -70,18 +74,29 @@
 				type="text"
 				value={settings.model}
 				oninput={handleModelChange}
-				placeholder="qwen2.5-coder:7b"
+				placeholder="openclaw"
 			/>
 		</div>
 
 		<div class="field">
-			<label for="token">Auth Token</label>
+			<label for="agent-id">Agent ID</label>
+			<input
+				id="agent-id"
+				type="text"
+				value={settings.agentId}
+				oninput={handleAgentIdChange}
+				placeholder="main"
+			/>
+		</div>
+
+		<div class="field">
+			<label for="token">Gateway Auth Token</label>
 			<input
 				id="token"
 				type="password"
 				value={settings.token}
 				oninput={handleTokenChange}
-				placeholder="Optional"
+				placeholder="Required — see ~/.openclaw/credentials/"
 			/>
 		</div>
 

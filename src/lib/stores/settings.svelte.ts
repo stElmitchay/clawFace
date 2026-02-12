@@ -1,17 +1,19 @@
 import { browser } from '$app/environment';
 
-const STORAGE_KEY = 'openclaw-settings-v2';
+const STORAGE_KEY = 'openclaw-settings-v3';
 
 interface Settings {
 	gatewayUrl: string;
 	model: string;
+	agentId: string;
 	token: string;
 	theme: 'system' | 'light' | 'dark';
 }
 
 const defaults: Settings = {
-	gatewayUrl: 'http://localhost:11434',
-	model: 'qwen2.5-coder:7b',
+	gatewayUrl: 'http://localhost:18789',
+	model: 'openclaw',
+	agentId: 'main',
 	token: '',
 	theme: 'system'
 };

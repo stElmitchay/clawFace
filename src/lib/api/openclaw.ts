@@ -1,4 +1,4 @@
-const DEFAULT_URL = 'http://localhost:11434';
+const DEFAULT_URL = 'http://localhost:18789';
 
 export interface ChatMessage {
 	role: 'user' | 'assistant' | 'system';
@@ -18,17 +18,28 @@ async function apiFetch(url: string, init?: RequestInit): Promise<Response> {
 	}
 }
 
-export async function checkConnection(gatewayUrl: string): Promise<boolean> {
+export async function checkConnection(gatewayUrl: string, token: string): Promise<boolean> {
 	try {
 		const base = resolveUrl(gatewayUrl);
+		const headers: Record<string, string> = {};
+		if (token) headers['Authorization'] = `Bearer ${token}`;
+
 		const controller = new AbortController();
 		const timeout = setTimeout(() => controller.abort(), 3000);
-		const res = await apiFetch(`${base}/v1/models`, {
-			method: 'GET',
+		const res = await apiFetch(`${base}/v1/chat/completions`, {
+			method: 'POST',
+			headers: { ...headers, 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				model: 'openclaw',
+				messages: [{ role: 'user', content: 'ping' }],
+				max_tokens: 1
+			}),
 			signal: controller.signal
 		});
 		clearTimeout(timeout);
-		return res.ok;
+		// Any non-HTML response means we reached the API
+		const contentType = res.headers.get('content-type') || '';
+		return contentType.includes('json') || contentType.includes('text/event-stream') || res.ok;
 	} catch {
 		return false;
 	}
@@ -37,6 +48,7 @@ export async function checkConnection(gatewayUrl: string): Promise<boolean> {
 export async function streamChat(
 	gatewayUrl: string,
 	model: string,
+	agentId: string,
 	token: string,
 	messages: ChatMessage[],
 	onChunk: (text: string) => void,
@@ -51,21 +63,29 @@ export async function streamChat(
 		if (token) {
 			headers['Authorization'] = `Bearer ${token}`;
 		}
+		if (agentId) {
+			headers['x-openclaw-agent-id'] = agentId;
+		}
 
 		const base = resolveUrl(gatewayUrl);
 		const res = await apiFetch(`${base}/v1/chat/completions`, {
 			method: 'POST',
 			headers,
 			body: JSON.stringify({
-				model: model || 'qwen2.5-coder:7b',
+				model: model || 'openclaw',
 				messages,
-				stream: true
+				stream: true,
+				user: 'clawface-app'
 			}),
 			signal
 		});
 
 		if (!res.ok) {
 			const body = await res.text().catch(() => '');
+			// Check if we got HTML back (Gateway UI instead of API)
+			if (body.includes('<!doctype html>') || body.includes('<html')) {
+				throw new Error('Gateway returned HTML instead of API response. Check your auth token in Settings.');
+			}
 			throw new Error(`HTTP ${res.status}: ${body || res.statusText}`);
 		}
 

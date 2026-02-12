@@ -8,7 +8,7 @@
 	async function check() {
 		checking = true;
 		const settings = getSettings();
-		connected = await checkConnection(settings.gatewayUrl);
+		connected = await checkConnection(settings.gatewayUrl, settings.token);
 		checking = false;
 	}
 
