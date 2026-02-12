@@ -1,6 +1,6 @@
 import { fetch } from '@tauri-apps/plugin-http';
 
-const DEFAULT_URL = 'http://localhost:18789';
+const DEFAULT_URL = 'http://localhost:11434';
 
 export interface ChatMessage {
 	role: 'user' | 'assistant' | 'system';
@@ -26,6 +26,7 @@ export async function checkConnection(gatewayUrl: string): Promise<boolean> {
 
 export async function streamChat(
 	gatewayUrl: string,
+	model: string,
 	token: string,
 	messages: ChatMessage[],
 	onChunk: (text: string) => void,
@@ -46,6 +47,7 @@ export async function streamChat(
 			method: 'POST',
 			headers,
 			body: JSON.stringify({
+				model: model || 'qwen2.5-coder:7b',
 				messages,
 				stream: true
 			}),

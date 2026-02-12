@@ -14,6 +14,10 @@
 		updateSettings({ gatewayUrl: (e.target as HTMLInputElement).value });
 	}
 
+	function handleModelChange(e: Event) {
+		updateSettings({ model: (e.target as HTMLInputElement).value });
+	}
+
 	function handleTokenChange(e: Event) {
 		updateSettings({ token: (e.target as HTMLInputElement).value });
 	}
@@ -55,7 +59,18 @@
 				type="url"
 				value={settings.gatewayUrl}
 				oninput={handleUrlChange}
-				placeholder="http://localhost:18789"
+				placeholder="http://localhost:11434"
+			/>
+		</div>
+
+		<div class="field">
+			<label for="model">Model</label>
+			<input
+				id="model"
+				type="text"
+				value={settings.model}
+				oninput={handleModelChange}
+				placeholder="qwen2.5-coder:7b"
 			/>
 		</div>
 

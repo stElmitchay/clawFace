@@ -4,12 +4,14 @@ const STORAGE_KEY = 'openclaw-settings';
 
 interface Settings {
 	gatewayUrl: string;
+	model: string;
 	token: string;
 	theme: 'system' | 'light' | 'dark';
 }
 
 const defaults: Settings = {
-	gatewayUrl: 'http://localhost:18789',
+	gatewayUrl: 'http://localhost:11434',
+	model: 'qwen2.5-coder:7b',
 	token: '',
 	theme: 'system'
 };
