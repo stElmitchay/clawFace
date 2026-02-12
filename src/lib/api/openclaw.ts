@@ -1,3 +1,5 @@
+import { fetch } from '@tauri-apps/plugin-http';
+
 export interface ChatMessage {
 	role: 'user' | 'assistant' | 'system';
 	content: string;
@@ -7,7 +9,7 @@ export async function checkConnection(gatewayUrl: string): Promise<boolean> {
 	try {
 		const res = await fetch(`${gatewayUrl}/v1/models`, {
 			method: 'GET',
-			signal: AbortSignal.timeout(3000)
+			connectTimeout: 3000
 		});
 		return res.ok;
 	} catch {
