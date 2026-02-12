@@ -30,7 +30,7 @@ export async function checkConnection(gatewayUrl: string, token: string): Promis
 			method: 'POST',
 			headers: { ...headers, 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				model: 'openclaw',
+				model: 'openclaw:main',
 				messages: [{ role: 'user', content: 'ping' }],
 				max_tokens: 1
 			}),
@@ -47,7 +47,6 @@ export async function checkConnection(gatewayUrl: string, token: string): Promis
 
 export async function streamChat(
 	gatewayUrl: string,
-	model: string,
 	agentId: string,
 	token: string,
 	messages: ChatMessage[],
@@ -63,16 +62,14 @@ export async function streamChat(
 		if (token) {
 			headers['Authorization'] = `Bearer ${token}`;
 		}
-		if (agentId) {
-			headers['x-openclaw-agent-id'] = agentId;
-		}
 
+		const agent = agentId || 'main';
 		const base = resolveUrl(gatewayUrl);
 		const res = await apiFetch(`${base}/v1/chat/completions`, {
 			method: 'POST',
 			headers,
 			body: JSON.stringify({
-				model: model || 'openclaw',
+				model: `openclaw:${agent}`,
 				messages,
 				stream: true,
 				user: 'clawface-app'

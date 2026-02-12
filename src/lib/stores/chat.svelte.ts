@@ -79,7 +79,6 @@ export async function sendMessage(content: string) {
 
 	await streamChat(
 		settings.gatewayUrl,
-		settings.model,
 		settings.agentId,
 		settings.token,
 		apiMessages,

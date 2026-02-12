@@ -1,10 +1,9 @@
 import { browser } from '$app/environment';
 
-const STORAGE_KEY = 'openclaw-settings-v3';
+const STORAGE_KEY = 'openclaw-settings-v4';
 
 interface Settings {
 	gatewayUrl: string;
-	model: string;
 	agentId: string;
 	token: string;
 	theme: 'system' | 'light' | 'dark';
@@ -12,7 +11,6 @@ interface Settings {
 
 const defaults: Settings = {
 	gatewayUrl: 'http://localhost:18789',
-	model: 'openclaw',
 	agentId: 'main',
 	token: '',
 	theme: 'system'

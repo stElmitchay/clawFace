@@ -14,10 +14,6 @@
 		updateSettings({ gatewayUrl: (e.target as HTMLInputElement).value });
 	}
 
-	function handleModelChange(e: Event) {
-		updateSettings({ model: (e.target as HTMLInputElement).value });
-	}
-
 	function handleAgentIdChange(e: Event) {
 		updateSettings({ agentId: (e.target as HTMLInputElement).value });
 	}
@@ -64,17 +60,6 @@
 				value={settings.gatewayUrl}
 				oninput={handleUrlChange}
 				placeholder="http://localhost:18789"
-			/>
-		</div>
-
-		<div class="field">
-			<label for="model">Model</label>
-			<input
-				id="model"
-				type="text"
-				value={settings.model}
-				oninput={handleModelChange}
-				placeholder="openclaw"
 			/>
 		</div>
 
