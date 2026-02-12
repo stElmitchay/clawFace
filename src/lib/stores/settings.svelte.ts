@@ -18,7 +18,12 @@ function loadSettings(): Settings {
 	if (!browser) return { ...defaults };
 	try {
 		const raw = localStorage.getItem(STORAGE_KEY);
-		if (raw) return { ...defaults, ...JSON.parse(raw) };
+		if (raw) {
+			const parsed = { ...defaults, ...JSON.parse(raw) };
+			// Never allow an empty gatewayUrl
+			if (!parsed.gatewayUrl) parsed.gatewayUrl = defaults.gatewayUrl;
+			return parsed;
+		}
 	} catch {}
 	return { ...defaults };
 }

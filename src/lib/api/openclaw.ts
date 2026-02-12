@@ -1,13 +1,20 @@
 import { fetch } from '@tauri-apps/plugin-http';
 
+const DEFAULT_URL = 'http://localhost:18789';
+
 export interface ChatMessage {
 	role: 'user' | 'assistant' | 'system';
 	content: string;
 }
 
+function resolveUrl(gatewayUrl: string): string {
+	return gatewayUrl || DEFAULT_URL;
+}
+
 export async function checkConnection(gatewayUrl: string): Promise<boolean> {
 	try {
-		const res = await fetch(`${gatewayUrl}/v1/models`, {
+		const base = resolveUrl(gatewayUrl);
+		const res = await fetch(`${base}/v1/models`, {
 			method: 'GET',
 			connectTimeout: 3000
 		});
@@ -34,7 +41,8 @@ export async function streamChat(
 			headers['Authorization'] = `Bearer ${token}`;
 		}
 
-		const res = await fetch(`${gatewayUrl}/v1/chat/completions`, {
+		const base = resolveUrl(gatewayUrl);
+		const res = await fetch(`${base}/v1/chat/completions`, {
 			method: 'POST',
 			headers,
 			body: JSON.stringify({
