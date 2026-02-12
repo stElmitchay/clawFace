@@ -1,5 +1,3 @@
-import { fetch } from '@tauri-apps/plugin-http';
-
 const DEFAULT_URL = 'http://localhost:11434';
 
 export interface ChatMessage {
@@ -11,13 +9,25 @@ function resolveUrl(gatewayUrl: string): string {
 	return gatewayUrl || DEFAULT_URL;
 }
 
+async function apiFetch(url: string, init?: RequestInit): Promise<Response> {
+	try {
+		const { fetch: tauriFetch } = await import('@tauri-apps/plugin-http');
+		return await tauriFetch(url, init);
+	} catch {
+		return await globalThis.fetch(url, init);
+	}
+}
+
 export async function checkConnection(gatewayUrl: string): Promise<boolean> {
 	try {
 		const base = resolveUrl(gatewayUrl);
-		const res = await fetch(`${base}/v1/models`, {
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), 3000);
+		const res = await apiFetch(`${base}/v1/models`, {
 			method: 'GET',
-			connectTimeout: 3000
+			signal: controller.signal
 		});
+		clearTimeout(timeout);
 		return res.ok;
 	} catch {
 		return false;
@@ -43,7 +53,7 @@ export async function streamChat(
 		}
 
 		const base = resolveUrl(gatewayUrl);
-		const res = await fetch(`${base}/v1/chat/completions`, {
+		const res = await apiFetch(`${base}/v1/chat/completions`, {
 			method: 'POST',
 			headers,
 			body: JSON.stringify({

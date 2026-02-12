@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 
-const STORAGE_KEY = 'openclaw-settings';
+const STORAGE_KEY = 'openclaw-settings-v2';
 
 interface Settings {
 	gatewayUrl: string;
